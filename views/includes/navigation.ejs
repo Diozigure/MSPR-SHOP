@@ -4,55 +4,57 @@
   <nav class="main-header__nav">
     <ul class="main-header__item-list">
       <li class="main-header__item">
-        <a class="<%= path === '/' ? 'active' : '' %>" href="/">Shop</a>
+        <a class="<%= path === '/' ? 'active' : '' %>" href="/">Geronimo-Corp</a>
       </li>
       <li class="main-header__item">
         <a class="<%= path === '/products' ? 'active' : '' %>" href="/products"
-          >Products</a
+          >Produits</a
         >
       </li>
       <% if (isAuthenticated) { %>
       <li class="main-header__item">
-        <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
+        <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Panier</a>
       </li>
       <li class="main-header__item">
         <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders"
-          >Orders</a
+          >Commandes</a
         >
       </li>
+      <% if (isAdmin) { %>
       <li class="main-header__item">
         <a
           class="<%= path === '/admin/add-product' ? 'active' : '' %>"
           href="/admin/add-product"
-          >Add Product
+          >Créer Produit
         </a>
       </li>
       <li class="main-header__item">
         <a
           class="<%= path === '/admin/products' ? 'active' : '' %>"
           href="/admin/products"
-          >Admin Products
+          >Administration Produits
         </a>
       </li>
+      <% } %>
       <% } %>
     </ul>
     <ul class="main-header__item-list">
       <% if (!isAuthenticated) { %>
       <li class="main-header__item">
         <a class="<%= path === '/login' ? 'active' : '' %>" href="/login"
-          >Login</a
+          >Connexion</a
         >
       </li>
       <li class="main-header__item">
         <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup"
-          >Sign Up</a
+          >Inscription</a
         >
       </li>
       <% } else { %>
       <li class="main-header__item">
         <form action="/logout" method="post">
           <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>" />
-          <button type="submit">Logout</button>
+          <button type="submit">Déconnexion</button>
         </form>
       </li>
       <% } %>
@@ -63,52 +65,53 @@
 <nav class="mobile-nav">
   <ul class="mobile-nav__item-list">
     <li class="mobile-nav__item">
-      <a class="<%= path === '/' ? 'active' : '' %>" href="/">Shop</a>
+      <a class="<%= path === '/' ? 'active' : '' %>" href="/">Geronimo-Corp</a>
     </li>
     <li class="mobile-nav__item">
       <a class="<%= path === '/products' ? 'active' : '' %>" href="/products"
-        >Products</a
+        >Produits</a
       >
     </li>
     <% if (isAuthenticated) { %>
     <li class="mobile-nav__item">
-      <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
+      <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Panier</a>
     </li>
     <li class="mobile-nav__item">
       <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders"
-        >Orders</a
+        >Commandes</a
       >
     </li>
+    <% if (isAdmin) { %>
     <li class="mobile-nav__item">
       <a
         class="<%= path === '/admin/add-product' ? 'active' : '' %>"
         href="/admin/add-product"
-        >Add Product
+        >Créer Produit
       </a>
     </li>
     <li class="mobile-nav__item">
       <a
         class="<%= path === '/admin/products' ? 'active' : '' %>"
         href="/admin/products"
-        >Admin Products
+        >Administration Produits
       </a>
     </li>
-    <% } %> <% if (!isAuthenticated) { %>
+    <% }} %> <% if (!isAuthenticated) { %>
     <li class="mobile-nav__item">
       <a class="<%= path === '/login' ? 'active' : '' %>" href="/login"
-        >Login</a
+        >Connexion</a
       >
     </li>
     <li class="mobile-nav__item">
       <a class="<%= path === '/signup' ? 'active' : '' %>" href="/signup"
-        >Signup</a
+        >Inscription</a
       >
     </li>
     <% } else { %>
     <li class="mobile-nav__item">
       <form action="/logout" method="post">
         <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>" />
-        <button type="submit">Logout</button>
+        <button type="submit">Déconnexion</button>
       </form>
     </li>
     <% } %>

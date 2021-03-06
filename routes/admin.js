@@ -2,57 +2,57 @@ const express = require("express");
 const expressValidator = require("express-validator");
 
 const adminController = require("../controllers/admin");
-const isAuth = require("../middleware/is-auth");
+const {isAuth, isAdmin} = require("../middleware/is-auth");
 
 const router = express.Router();
 
-router.get("/add-product", isAuth, adminController.getAddProduct);
-router.get("/products", isAuth, adminController.getProducts);
+router.get("/add-product", isAuth, isAdmin, adminController.getAddProduct);
+router.get("/products", isAuth, isAdmin, adminController.getProducts);
 router.post(
   "/add-product",
   [
     expressValidator
-      .body("title", "Please ensure the title contains more than 3 characters.")
+      .body("title", "Le titre doit contenir plus de 3 caractères.")
       .isString()
       .isLength({ min: 3 })
       .trim(),
     expressValidator
-      .body("price", "Please ensure the price is a decimal.")
+      .body("price", "Le prix doit être un nombre décimal.")
       .isFloat(),
     expressValidator
       .body(
         "description",
-        "Please ensure the description is between 5 and 400 characters."
+        "La description doit faire entre 5 et 400 caractères."
       )
       .isLength({ min: 5, max: 400 })
       .trim()
   ],
-  isAuth,
+  isAuth, isAdmin,
   adminController.postAddProduct
 );
-router.get("/edit-product/:productId", isAuth, adminController.getEditProduct);
+router.get("/edit-product/:productId", isAuth, isAdmin, adminController.getEditProduct);
 router.post(
   "/edit-product",
   [
     expressValidator
-      .body("title", "Please ensure the title contains more than 3 characters.")
+      .body("title", "Le titre doit contenir plus de 3 caractères.")
       .isString()
       .isLength({ min: 3 })
       .trim(),
     expressValidator
-      .body("price", "Please ensure the price is a decimal.")
+      .body("price", "Le prix doit être un nombre décimal.")
       .isFloat(),
     expressValidator
       .body(
         "description",
-        "Please ensure the description is between 5 and 400 characters."
+        "La description doit faire entre 5 et 400 caractères."
       )
       .isLength({ min: 5, max: 400 })
       .trim()
   ],
-  isAuth,
+  isAuth, isAdmin,
   adminController.postEditProduct
 );
-router.delete("/product/:productId", isAuth, adminController.deleteProduct);
+router.delete("/product/:productId", isAuth, isAdmin, adminController.deleteProduct);
 
 module.exports = router;
