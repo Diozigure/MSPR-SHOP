@@ -7,16 +7,16 @@ créer à partir d'une architecture MVC
 Node.js serveur d'appli
 
 ### Modules installés
-express
-mongose
-ejs
-pdfkit
-csurf
-multer
-nodemon
-stripe
-bcrypt
-nodemailer
+- express
+- mongose
+- ejs
+- pdfkit
+- csurf
+- multer
+- nodemon
+- stripe
+- bcrypt
+- nodemailer
 
 ### BDD
 Les données sont stockés en NoSQL avec MongoDB
