@@ -1,9 +1,9 @@
 # geronimo-corp-shop
-Shop pour le MSPR Infrastructure et réseaux
-créer à partir d'une architecture MVC
+Shop pour le MSPR Infrastructure et réseaux, créer à partir d'une architecture MVC
+
+Compte Admin par defaut : admin@geronimo-corp.com / admin
 
 ## Les technos
-
 Node.js serveur d'appli
 
 ### Modules installés
