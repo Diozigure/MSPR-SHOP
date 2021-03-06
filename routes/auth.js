@@ -14,10 +14,10 @@ router.post(
     expressValidator
       .body("email")
       .isEmail()
-      .withMessage("Please enter a valid email address.")
+      .withMessage("L'adresse mail est invalide.")
       .normalizeEmail(),
     expressValidator
-      .body("password", "Password has to be valid.")
+      .body("password", "Le mot de passe est invalide.")
       .isLength({ min: 5 })
       .isAlphanumeric()
       .trim()
@@ -30,16 +30,12 @@ router.post(
     expressValidator
       .check("email")
       .isEmail()
-      .withMessage("Please enter a valid email.")
+      .withMessage("L'adresse mail est invalide.")
       .custom((value, { req }) => {
-        // if (value === "test@test.com") {
-        //   throw new Error("This email address is forbidden.");
-        // }
-        // return true;
         return User.findOne({ email: value }).then(userDoc => {
           if (userDoc) {
             return Promise.reject(
-              "Email address is already in use, please use a different one."
+              "L'adresse mail est déjà utilisé."
             );
           }
         });
@@ -48,7 +44,7 @@ router.post(
     expressValidator
       .body(
         "password",
-        "Please enter an alphanumeric password longer than 5 characters."
+        "Le mot de passe doit faire au moins 5 caratères."
       )
       .isLength({ min: 5 })
       .isAlphanumeric()
@@ -58,7 +54,7 @@ router.post(
       .trim()
       .custom((value, { req }) => {
         if (value !== req.body.password) {
-          throw new Error("Passwords must match!");
+          throw new Error("Les mots de passe doivent être identique!");
         }
         return true;
       })

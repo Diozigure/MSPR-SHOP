@@ -6,15 +6,15 @@
         <%- include('../includes/navigation.ejs') %>
         <main>
             <% if (orders.length <= 0) { %>
-                <h1>Nothing there!</h1>
+                <h1>Aucune commande trouvée</h1>
             <% } else { %>
                 <ul class="orders">
                     <% orders.forEach(order => { %>
                         <li class="orders__item">
-                            <h1>Order - # <%= order._id %> - <a href="/orders/<%= order._id %>">Invoice</a></h1>
+                            <h1>Commande - # <%= order._id %> - <a href="/orders/<%= order._id %>">Facture</a></h1>
                             <ul class="orders__products">
                                 <% order.products.forEach(p => { %>
-                                    <li class="orders__products-item"><%= p.product.title %> (<%= p.quantity %>) - £<%= p.product.price * p.quantity %> </li>
+                                    <li class="orders__products-item"><%= p.product.title %> (<%= p.quantity %>) - €<%= p.product.price * p.quantity %> </li>
                                 <% }); %>
                             </ul>
                         </li>

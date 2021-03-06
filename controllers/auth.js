@@ -21,7 +21,7 @@ exports.getLogin = (req, res, next) => {
   message.length > 0 ? (message = message[0]) : (message = null);
   res.render("auth/login", {
     path: "/login",
-    pageTitle: "Login",
+    pageTitle: "Connexion",
     errorMessage: message,
     oldInput: {
       email: "",
@@ -36,7 +36,7 @@ exports.getSignup = (req, res, next) => {
   message.length > 0 ? (message = message[0]) : (message = null);
   res.render("auth/signup", {
     path: "/signup",
-    pageTitle: "Signup",
+    pageTitle: "Inscription",
     errorMessage: message,
     oldInput: {
       email: "",
@@ -56,7 +56,7 @@ exports.postLogin = (req, res, next) => {
     console.log(errors.array());
     return res.status(422).render("auth/login", {
       path: "/login",
-      pageTitle: "Login",
+      pageTitle: "Connexion",
       errorMessage: errors.array()[0].msg,
       oldInput: {
         email: email,
@@ -71,7 +71,7 @@ exports.postLogin = (req, res, next) => {
       if (!user) {
         return res.status(422).render("auth/login", {
           path: "/login",
-          pageTitle: "Login",
+          pageTitle: "Connexion",
           errorMessage: "Invalid email or password.",
           oldInput: {
             email: email,
@@ -91,7 +91,7 @@ exports.postLogin = (req, res, next) => {
         }
         return res.status(422).render("auth/login", {
           path: "/login",
-          pageTitle: "Login",
+          pageTitle: "Connexion",
           errorMessage: "Invalid email or password.",
           oldInput: {
             email: email,
@@ -117,7 +117,7 @@ exports.postSignup = (req, res, next) => {
     console.log(errors.array());
     return res.status(422).render("auth/signup", {
       path: "/signup",
-      pageTitle: "Signup",
+      pageTitle: "Inscription",
       errorMessage: errors.array()[0].msg,
       oldInput: {
         email: email,
@@ -142,9 +142,9 @@ exports.postSignup = (req, res, next) => {
       res.redirect("/login");
       return transporter.sendMail({
         to: email,
-        from: "node-shop@awc-node-app.com",
-        subject: "Signup succeeded!",
-        html: "<h1>You successfully created an account with node-app-shop</h1>"
+        from: "shop@geronimo-corp.com",
+        subject: "Inscription réussi!",
+        html: "<h1>Vous avez créer avec succès un compte chez geronimo-corp</h1>"
       });
     })
     .catch(err => {
@@ -181,7 +181,7 @@ exports.postReset = (req, res, next) => {
     User.findOne({ email: req.body.email })
       .then(user => {
         if (!user) {
-          req.flash("error", "No account with that email could be found.");
+          req.flash("error", "Aucun compte avec cette email a pu être trouvé.");
           return res.redirect("/reset");
         }
         user.resetToken = token;
@@ -190,12 +190,12 @@ exports.postReset = (req, res, next) => {
           res.redirect("/");
           return transporter.sendMail({
             to: req.body.email,
-            from: "node-shop@awc-node-app.com",
+            from: "shop@geronimo-corp.com",
             subject: "Password Reset",
             html: `
-                        <p>You requested a password reset</p>
-                        <p><a href="http://localhost:3000/reset/${token}">Click here to reset your password.</a></p>
-                        <p>If you did not request a password reset, please ignore this email.</p>
+                        <p>Vous avez fait une demande de reset de mot de passe</p>
+                        <p><a href="http://localhost:3500/reset/${token}">Click here to reset your password.</a></p>
+                        <p>Si vous n'avez pas fait de demande de reset de mot de passe, ignorez cette email.</p>
                         `
           });
         });

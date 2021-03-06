@@ -22,7 +22,7 @@ exports.getProducts = (req, res, next) => {
     .then(products => {
       res.render("shop/product-list", {
         prods: products,
-        pageTitle: "Products",
+        pageTitle: "Produits",
         path: "/products",
         currentPage: page,
         hasNextPage: ITEMS_PER_PAGE * page < totalItems,
@@ -70,7 +70,7 @@ exports.getIndex = (req, res, next) => {
     .then(products => {
       res.render("shop/index", {
         prods: products,
-        pageTitle: "Shop",
+        pageTitle: "Geronimo-Corp - Shop",
         path: "/",
         currentPage: page,
         hasNextPage: ITEMS_PER_PAGE * page < totalItems,
@@ -95,7 +95,7 @@ exports.getCart = (req, res, next) => {
       const products = user.cart.items;
       res.render("shop/cart", {
         path: "/cart",
-        pageTitle: "Your Cart",
+        pageTitle: "Votre Panier",
         products: products
       });
     })
@@ -185,7 +185,7 @@ exports.postOrder = (req, res, next) => {
     .then(result => {
       const charge = stripe.charges.create({
         amount: totalSum * 100,
-        currency: "gbp",
+        currency: "eur",
         description: "Order",
         source: token,
         metadata: { order_id: result._id.toString() }
@@ -208,7 +208,7 @@ exports.getOrders = (req, res, next) => {
     .then(orders => {
       res.render("shop/orders", {
         path: "/orders",
-        pageTitle: "Your Orders",
+        pageTitle: "Vos Commandes",
         orders: orders
       });
     })
@@ -229,14 +229,14 @@ exports.getInvoice = (req, res, next) => {
       if (order.user.userId.toString() !== req.user._id.toString()) {
         return next(new Error("No Access."));
       }
-      const invoiceName = "invoice-" + orderId + ".pdf";
+      const invoiceName = "facture-" + orderId + ".pdf";
       const invoicePath = path.join("data", "invoices", invoiceName);
 
       const pdfDoc = new PDFDocument();
       pdfDoc.pipe(fs.createWriteStream(invoicePath));
       pdfDoc.pipe(res);
 
-      pdfDoc.fontSize(26).text("Invoice", {
+      pdfDoc.fontSize(26).text("Facture", {
         underline: true,
         align: "center"
       });
@@ -246,10 +246,10 @@ exports.getInvoice = (req, res, next) => {
         totalPrice += p.product.price * p.quantity;
         pdfDoc
           .fontSize("14")
-          .text(`${p.product.title} - ${p.quantity} x £${p.product.price}`);
+          .text(`${p.product.title} - ${p.quantity} x €${p.product.price}`);
       });
       pdfDoc.text("----");
-      pdfDoc.text(`Total Price: £${totalPrice}`);
+      pdfDoc.text(`Prix Total: €${totalPrice}`);
 
       pdfDoc.end();
       // fs.readFile(invoicePath, (err, data) => {

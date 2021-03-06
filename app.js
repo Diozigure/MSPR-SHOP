@@ -12,10 +12,12 @@ const multer = require("multer");
 
 const errorController = require("./controllers/error");
 const shopController = require("./controllers/shop");
-const isAuth = require("./middleware/is-auth");
+const adminController = require("./controllers/admin");
+const {isAuth} = require("./middleware/is-auth");
 const User = require("./models/user");
 
 const MONGODB_URI = secrets.MONGODB_URI;
+console.log(MONGODB_URI)
 const app = express();
 const store = new MongoDBStore({
   uri: MONGODB_URI,
@@ -44,6 +46,8 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+adminController.genereteAdmin();
+
 app.set("view engine", "ejs");
 app.set("views", "views");
 
@@ -70,6 +74,7 @@ app.use(flash());
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.isAdmin = req.session.user && req.session.user.role == 'Admin';
   next();
 });
 
@@ -107,7 +112,6 @@ app.get("/500", errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-  console.log(error);
   res.status(500).render("500", {
     pageTitle: "Error",
     path: "/500",
@@ -118,7 +122,7 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(MONGODB_URI, { useNewUrlParser: true })
   .then(() => {
-    app.listen(3000);
+    app.listen(secrets.PORT);
   })
   .catch(err => {
     console.log(err);

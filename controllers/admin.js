@@ -1,12 +1,13 @@
 const Product = require("../models/product");
 const User = require("../models/user");
 const fileHelper = require("../util/file");
+const bcrypt = require("bcryptjs");
 
 const expressValidator = require("express-validator");
 
 exports.getAddProduct = (req, res, next) => {
   res.render("admin/edit-product", {
-    pageTitle: "Add Product",
+    pageTitle: "Ajout Produit",
     path: "/admin/add-product",
     editing: false,
     hasError: false,
@@ -22,7 +23,7 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
   if (!image) {
     return res.status(422).render("admin/edit-product", {
-      pageTitle: "Add Product",
+      pageTitle: "Ajout Produit",
       path: "/admin/edit-product",
       editing: false,
       hasError: true,
@@ -31,7 +32,7 @@ exports.postAddProduct = (req, res, next) => {
         price: price,
         description: description
       },
-      errorMessage: "Attached file is not an image.",
+      errorMessage: "Le fichier atttaché n'est pas une image.",
       validationErrors: []
     });
   }
@@ -39,7 +40,7 @@ exports.postAddProduct = (req, res, next) => {
 
   if (!errors.isEmpty()) {
     return res.status(422).render("admin/edit-product", {
-      pageTitle: "Add Product",
+      pageTitle: "Ajout Produit",
       path: "/admin/add-product",
       editing: false,
       hasError: true,
@@ -102,7 +103,7 @@ exports.getEditProduct = (req, res, next) => {
         return res.redirect("/");
       }
       res.render("admin/edit-product", {
-        pageTitle: "Edit Product",
+        pageTitle: "Edition Produit",
         path: "/admin/edit-product",
         editing: editMode,
         product: product,
@@ -128,7 +129,7 @@ exports.postEditProduct = (req, res, next) => {
 
   if (!errors.isEmpty()) {
     return res.status(422).render("admin/edit-product", {
-      pageTitle: "Edit Product",
+      pageTitle: "Edition Produit",
       path: "/admin/edit-product",
       editing: true,
       hasError: true,
@@ -176,7 +177,7 @@ exports.getProducts = (req, res, next) => {
       console.log(products);
       res.render("admin/products", {
         prods: products,
-        pageTitle: "Admin Products",
+        pageTitle: "Administration Produits",
         path: "/admin/products"
       });
     })
@@ -192,7 +193,7 @@ exports.deleteProduct = (req, res, next) => {
   Product.findById(prodId)
     .then(product => {
       if (!product) {
-        return next(new Error("Product not found."));
+        return next(new Error("Produit introuvable."));
       }
       return Product.deleteOne({ _id: prodId, userId: req.user._id }).then(
         () => {
@@ -212,6 +213,25 @@ exports.deleteProduct = (req, res, next) => {
       res.status(200).json({ message: "Success!" });
     })
     .catch(err => {
-      res.status(500).json({ message: "Deleting product failed." });
+      res.status(500).json({ message: "Echec de la suppression du produit." });
     });
 };
+
+exports.genereteAdmin = () => {
+  const email = 'admin@geronimo-corp.com';
+  const password = 'admin';
+  User.findOne({email: email}).then(u => {
+    if(u) return;
+    bcrypt.hash(password, 12).then(hashedPassword => {
+      const user = new User({
+        email: email,
+        password: hashedPassword,
+        cart: { items: [] },
+        role: 'Admin'
+      });
+      console.log('Admin created')
+      return user.save();
+    })
+
+  });
+}
