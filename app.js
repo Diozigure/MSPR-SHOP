@@ -30,7 +30,7 @@ const fileStorage = multer.diskStorage({
     cb(null, "images");
   },
   filename: (rew, file, cb) => {
-    cb(null, new Date().getTime() + "-" + file.originalname);
+    cb(null, file.originalname);
   }
 });
 
@@ -55,12 +55,6 @@ const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(
-  multer({ storage: fileStorage, filterFilter: fileFilter }).single("image")
-);
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(
   session({
     secret: "super secret",
@@ -69,12 +63,20 @@ app.use(
     store: store
   })
 );
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(
+  multer({ storage: fileStorage, filterFilter: fileFilter }).single("image")
+);
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/images", express.static(path.join(__dirname, "images")));
+
 
 app.use(flash());
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.isAdmin = req.session.user && req.session.user.role == 'Admin';
+  res.locals.env_name = secrets.ENV_NAME;
   next();
 });
 
@@ -120,10 +122,20 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(MONGODB_URI, { useNewUrlParser: true })
-  .then(() => {
+  .connect(MONGODB_URI, {
+    server: {
+      readPreference: "nearest",
+      strategy: "ping"
+    },
+    replset: {
+      rs_name: "rs0",
+      readPreference: "nearest",
+      strategy: "ping"
+    },
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }).then(() => {
     app.listen(secrets.PORT);
-  })
-  .catch(err => {
+  }).catch(err => {
     console.log(err);
   });
